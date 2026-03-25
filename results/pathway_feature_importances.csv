@@ -1,0 +1,21 @@
+pathway,importance
+TRNA-CHARGING-PWY: tRNA charging,0.10060776063581114
+PWY-2942: L-lysine biosynthesis III,0.05998129967274427
+PEPTIDOGLYCANSYN-PWY: peptidoglycan biosynthesis I (meso-diaminopimelate containing),0.05965404394576905
+PWY-6386: UDP-N-acetylmuramoyl-pentapeptide biosynthesis II (lysine-containing),0.05030388031790557
+PWY-6609: adenine and adenosine salvage III,0.04740532959326789
+PWY-6737: starch degradation V,0.044506778868630206
+PWY-5973: cis-vaccenate biosynthesis,0.044506778868630206
+PWY-7221: guanosine ribonucleotides de novo biosynthesis,0.04352501168770454
+PWY-7111: pyruvate fermentation to isobutanol (engineered),0.04095371669004207
+1CMET2-PWY: N10-formyl-tetrahydrofolate biosynthesis,0.04062646096306686
+VALSYN-PWY: L-valine biosynthesis,0.04062646096306686
+PWY-6387: UDP-N-acetylmuramoyl-pentapeptide biosynthesis I (meso-diaminopimelate containing),0.030949041608228145
+PWY-6385: peptidoglycan biosynthesis III (mycobacteria),0.02996727442730248
+PWY-7219: adenosine ribonucleotides de novo biosynthesis,0.02837774661056569
+ILEUSYN-PWY: L-isoleucine biosynthesis I (from threonine),0.027395979429640015
+PWY-5686: UMP biosynthesis,0.025806451612903226
+PWY-3841: folate transformations II,0.022253389434315103
+PWY-5695: urate biosynthesis/inosine 5'-phosphate degradation,0.022253389434315103
+DTDPRHAMSYN-PWY: dTDP-L-rhamnose biosynthesis I,0.021926133707339878
+PWY-1042: glycolysis IV (plant cytosol),0.018373071528751752
