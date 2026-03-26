@@ -1,5 +1,6 @@
 ``````md
-# IBD Metagenomics Analysis
+# Microbiome Bioinformatics Learning Series
+## Project 2: IBD Metagenomics Analysis
 
 Whole-genome shotgun (WGS) metagenomics analysis of Inflammatory Bowel Disease (IBD) patients using real NIH Human Microbiome Project 2 (HMP2) data.
 
