@@ -1,4 +1,3 @@
-```
 # Data Download Instructions
 
 The raw data for this project comes from the NIH Human Microbiome Project 2 (HMP2), also known as the Integrative Human Microbiome Project (iHMP). Due to file size and data use policies, raw data files are not included in this repository.
@@ -7,8 +6,8 @@ The raw data for this project comes from the NIH Human Microbiome Project 2 (HMP
 
 ## Data Source
 
-**Portal:** NIH Human Microbiome Project 2 — Inflammatory Bowel Disease Multi-omics Database (ibdmdb.org)  
-**Study:** HMP2 / iHMP  
+**Portal:** [https://ibdmdb.org](https://ibdmdb.org)
+**Study:** HMP2 — Inflammatory Bowel Disease Multi-omics Database
 **Data type:** Whole-genome shotgun (WGS) metagenomics, pre-computed profiles
 
 ---
@@ -27,45 +26,34 @@ The raw data for this project comes from the NIH Human Microbiome Project 2 (HMP
 
 ## Option 1: Download Pre-Computed Profiles (Recommended)
 
-The analysis scripts use pre-computed MetaPhlAn taxonomic profiles and HUMAnN functional profiles. These are much smaller than raw FASTQ files and sufficient to reproduce all results.
+The analysis scripts use pre-computed MetaPhlAn taxonomic profiles and HUMAnN functional profiles provided by the HMP2 consortium. These are much smaller than raw FASTQ files and sufficient to reproduce all results in this project.
 
-### Step 1: Accept the Data Use Agreement
+### Step 1: Register and Accept Data Use Agreement
 
-Go to the HMP2 / iHMP data portal (search "ibdmdb" or "iHMP portal") and accept the data use terms before downloading any files.
+Visit [https://ibdmdb.org](https://ibdmdb.org) and accept the data use terms.
 
-### Step 2: Navigate to the Files
+### Step 2: Download Files
 
-On the portal, navigate to:
+Navigate to the HMP2 data portal and download the following for each sample:
 
-```
-Products → WGS → Taxonomic Profiles (MetaPhlAn)
-Products → WGS → Functional Profiles (HUMAnN)
-Products → Metadata
-```
+- `*_genefamilies_cpm.tsv` — Gene family abundances (HUMAnN output)
+- `*_level4ec.tsv` — EC enzyme classifications (HUMAnN output)
+- `*_pathabundance_cpm.tsv` — Pathway abundances (HUMAnN output)
+- `hmp2_metadata.csv` — Sample metadata
 
-### Step 3: Download the Following Files
+### Step 3: Place Files
 
-| File | Description |
-|------|-------------|
-| `hmp2_metaphlan_species_abundances.tsv` | Merged MetaPhlAn species abundance table |
-| `hmp2_pathabundances_relab.tsv.gz` | HUMAnN pathway abundances (relative) |
-| `hmp2_genefamilies.tsv.gz` | HUMAnN gene family abundances (UniRef90) |
-| `hmp2_metadata.csv` | Sample metadata with diagnosis labels |
-
-Decompress the `.gz` files after downloading:
-
-```bash
-gunzip hmp2_pathabundances_relab.tsv.gz
-gunzip hmp2_genefamilies.tsv.gz
-```
-
-### Step 4: Place Files in the Data Directory
+Place all downloaded files in the `data/` directory:
 
 ```
 data/
-├── hmp2_metaphlan_species_abundances.tsv
-├── hmp2_pathabundances_relab.tsv
-├── hmp2_genefamilies.tsv
+├── MSM5LLHV_genefamilies_cpm.tsv
+├── MSM5LLHV_level4ec.tsv
+├── MSM5LLHV_pathabundance_cpm.tsv
+├── HSM7CZ2A_genefamilies_cpm.tsv
+├── HSM7CZ2A_level4ec.tsv
+├── HSM7CZ2A_pathabundance_cpm.tsv
+├── ... (repeat for all 5 samples)
 └── hmp2_metadata.csv
 ```
 
@@ -73,43 +61,30 @@ data/
 
 ## Option 2: Download Raw FASTQ Files
 
-If you want to rerun the full pipeline from raw reads (requires significant compute and storage).
+If you want to rerun the full pipeline from raw reads (requires significant compute and storage):
 
-### Requirements
-
+**Requirements:**
 - 50–200 GB storage per sample
 - 16+ GB RAM for HUMAnN
-- Several hours of compute per sample
+- Hours of compute per sample
 
-### Download via SRA Toolkit
-
-Sample-to-SRA accession mappings are available in `hmp2_metadata.csv`. Use the SRA toolkit to download by accession:
+**Download via SRA Toolkit:**
 
 ```bash
-# Install SRA toolkit
 conda install -c bioconda sra-tools
-
-# Download by SRA accession
 prefetch SRR_ACCESSION
 fastq-dump --split-files SRR_ACCESSION
 ```
 
----
-
-## Option 3: Bulk Download via the Portal File Browser
-
-The HMP2 portal provides a file browser and bulk download tool. Filter by:
-- **Data type:** WGS
-- **File type:** `taxonomic_profile` or `pathabundance`
-- **Sample IDs:** HSM7CZ2A, MSM5LLHV, HSM6XRQE, CSM9X1ZO, CSM5FZ4C
+Sample-to-SRA accession mappings are available in the HMP2 metadata file at ibdmdb.org.
 
 ---
 
 ## Running the Full Pipeline from FASTQ
 
-If starting from raw FASTQ files, run the following tools before the analysis scripts:
+If starting from raw FASTQ files, run these tools before the analysis scripts:
 
-### 1. Quality Control
+**Quality Control (Trimmomatic):**
 
 ```bash
 trimmomatic PE -threads 8 \
@@ -119,7 +94,7 @@ trimmomatic PE -threads 8 \
     ILLUMINACLIP:adapters.fa:2:30:10 LEADING:3 TRAILING:3 MINLEN:36
 ```
 
-### 2. Host Read Removal
+**Host Read Removal (Bowtie2):**
 
 ```bash
 bowtie2 -x human_genome_index \
@@ -129,7 +104,7 @@ bowtie2 -x human_genome_index \
     -S /dev/null
 ```
 
-### 3. Taxonomic Profiling (MetaPhlAn)
+**Taxonomic Profiling (MetaPhlAn):**
 
 ```bash
 metaphlan sample_host_removed_1.fastq.gz,sample_host_removed_2.fastq.gz \
@@ -138,7 +113,7 @@ metaphlan sample_host_removed_1.fastq.gz,sample_host_removed_2.fastq.gz \
     -o sample_metaphlan_profile.txt
 ```
 
-### 4. Functional Profiling (HUMAnN)
+**Functional Profiling (HUMAnN):**
 
 ```bash
 humann --input sample_host_removed_1.fastq.gz \
@@ -147,16 +122,13 @@ humann --input sample_host_removed_1.fastq.gz \
     --taxonomic-profile sample_metaphlan_profile.txt
 ```
 
-### 5. Merge Profiles Across Samples
+**Merge Profiles Across Samples:**
 
 ```bash
-# Merge HUMAnN pathway tables
-humann_join_tables \
-    --input humann_output/ \
+humann_join_tables --input humann_output/ \
     --output merged_pathabundances.tsv \
     --file_name pathabundance
 
-# Merge MetaPhlAn tables
 merge_metaphlan_tables.py *_metaphlan_profile.txt > merged_metaphlan.tsv
 ```
 
@@ -166,7 +138,7 @@ merge_metaphlan_tables.py *_metaphlan_profile.txt > merged_metaphlan.tsv
 
 | File | Approximate Size |
 |------|-----------------|
-| Raw FASTQ per sample (paired) | 2–10 GB |
+| Raw FASTQ (per sample, paired) | 2–10 GB |
 | MetaPhlAn merged profile | < 5 MB |
 | HUMAnN pathway abundances (merged) | 10–100 MB |
 | HUMAnN gene families (merged) | 500 MB – 2 GB |
@@ -176,6 +148,4 @@ merge_metaphlan_tables.py *_metaphlan_profile.txt > merged_metaphlan.tsv
 
 ## Citation
 
-Lloyd-Price, J., Arze, C., Ananthakrishnan, A.N. et al. **Multi-omics of the gut microbial ecosystem in inflammatory bowel diseases.** *Nature* 569, 655–662 (2019). DOI: 10.1038/s41586-019-1237-9
-```
-
+Lloyd-Price, J., Arze, C., Ananthakrishnan, A.N. et al. **Multi-omics of the gut microbial ecosystem in inflammatory bowel diseases.** *Nature* 569, 655–662 (2019). [https://doi.org/10.1038/s41586-019-1237-9](https://doi.org/10.1038/s41586-019-1237-9)

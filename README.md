@@ -55,7 +55,7 @@ This project performs comprehensive metagenomic analysis of IBD patients using w
 
 ---
 
-##Methods
+## Methods
 
 ### Analysis Pipeline
 
